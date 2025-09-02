@@ -9,7 +9,6 @@
 
 *A comprehensive, full-stack payroll management solution built with modern technologies*
 
-[🚀 Live Demo](#) | [📖 Documentation](#features) | [🛠️ Installation](#installation)
 
 </div>
 
@@ -132,71 +131,16 @@ graph TB
 
 ---
 
-## 📱 Screenshots
+## 📱 Screenshot
 
 ### 🏠 Dashboard
 <div align="center">
-  <img src="screenshots/admin-dashboard.png" alt="Admin Dashboard" width="45%">
-  <img src="screenshots/employee-dashboard.png" alt="Employee Dashboard" width="45%">
-</div>
-
-### 👥 Employee Management
-<div align="center">
-  <img src="screenshots/employee-list.png" alt="Employee List" width="45%">
-  <img src="screenshots/employee-profile.png" alt="Employee Profile" width="45%">
-</div>
-
-### 📅 Leave Management
-<div align="center">
-  <img src="screenshots/leave-application.png" alt="Leave Application" width="45%">
-  <img src="screenshots/leave-approval.png" alt="Leave Approval" width="45%">
-</div>
-
-### 💰 Payroll System
-<div align="center">
-  <img src="screenshots/payroll-generation.png" alt="Payroll Generation" width="45%">
-  <img src="screenshots/payslip.png" alt="Payslip" width="45%">
+  <img src="https://github.com/Sanjith7760/PayrollManagementSystem_Capestone_FullStackProject/blob/master/Screenshot%202025-09-02%20231157.png" alt="Admin Dashboard" width="45%">
 </div>
 
 ---
 
-## ⚡ Quick Start
 
-### 🐳 **Using Docker (Recommended)**
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/payroll-management-system.git
-cd payroll-management-system
-
-# Start with Docker Compose
-docker-compose up -d
-
-# Access the application
-# Frontend: http://localhost:3000
-# Backend: http://localhost:8080
-# Database: localhost:3306
-```
-
-### 🔧 **Manual Setup**
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/payroll-management-system.git
-cd payroll-management-system
-
-# Backend Setup
-cd PayrollManagementSystem
-mvn clean install
-mvn spring-boot:run
-
-# Frontend Setup (new terminal)
-cd payroll-frontend
-npm install
-npm run dev
-```
-
----
 
 ## 🔧 Installation
 
@@ -218,9 +162,14 @@ spring.datasource.password=your_password
 
 2. **Run Backend**
 ```bash
-cd PayrollManagementSystem
-mvn clean install
-mvn spring-boot:run
+Method 1: Using STS Interface 
+Open your project in STS
+
+File → Import → Existing Maven Projects → Select your PayrollManagementSystem folder
+
+Right-click on your project in Package Explorer
+
+Select "Run As" → "Spring Boot App"
 ```
 
 ### **Frontend Setup**
@@ -267,9 +216,11 @@ npm run dev
 ### **Authentication Endpoints**
 ```http
 POST /api/v1/auth/login
+GET  /api/v1/auth/me
 POST /api/v1/auth/register
 POST /api/v1/auth/refresh
-GET  /api/v1/auth/me
+POST /api/v1/auth/register/admin
+GET  /api/v1/auth/welcome-message
 ```
 
 ### **Employee Management**
@@ -279,14 +230,19 @@ POST   /api/v1/employees
 GET    /api/v1/employees/{id}
 PUT    /api/v1/employees/{id}
 DELETE /api/v1/employees/{id}
+GET    /api/v1/employees/user/{userId}
 ```
 
 ### **Leave Management**
 ```http
 GET   /api/v1/leaves
 POST  /api/v1/leaves
-GET   /api/v1/leaves/pending
+GET   /api/v1/leaves/{id}
+DELETE /api/v1/leaves/{id}
+GET   /api/v1/leaves/{id}/ai-message
 PATCH /api/v1/leaves/{id}/status
+GET   /api/v1/leaves/employee/{employeeId}
+GET   /api/v1/leaves/pending
 ```
 
 ### **Payroll Management**
@@ -295,9 +251,12 @@ GET   /api/v1/payroll
 POST  /api/v1/payroll
 GET   /api/v1/payroll/employee/{id}
 PATCH /api/v1/payroll/{id}/process
+GET   /api/v1/payroll/{id}
+DELETE /api/v1/payroll/{id}
+GET   /api/v1/payroll/period
 ```
 
-> 📖 **Full API Documentation**: Available at `http://localhost:8080/swagger-ui.html`
+> 📖 **Full API Documentation**: Available at `http://localhost:8080/swagger-ui.html` and POSTMAN
 
 ---
 
@@ -305,48 +264,10 @@ PATCH /api/v1/payroll/{id}/process
 
 ### **Backend Testing**
 ```bash
-# Run all tests
-mvn test
+#1. Run ALL Tests:
+Right-click on the project name in Package Explorer
 
-# Run specific test class
-mvn test -Dtest=EmployeeServiceTest
-
-# Generate test coverage report
-mvn jacoco:report
-```
-
-### **Frontend Testing**
-```bash
-# Run unit tests
-npm test
-
-# Run e2e tests
-npm run test:e2e
-
-# Generate coverage report
-npm run test:coverage
-```
-
----
-
-## 🚀 Deployment
-
-### **Production Build**
-
-**Frontend:**
-```bash
-npm run build
-```
-
-**Backend:**
-```bash
-mvn clean package -Pprod
-```
-
-### **Docker Deployment**
-```bash
-# Build and deploy
-docker-compose -f docker-compose.prod.yml up -d
+Select "Run As" → "JUnit Test"
 ```
 
 ---
@@ -384,21 +305,18 @@ We welcome contributions! Please follow these steps:
 - [ ] Email notifications for leave approvals (Coming soon)
 - [ ] Advanced reporting dashboard (In development)
 - [ ] Mobile app version (Planned)
+- [ ] Deployed using Docker or AWS (Soon)
+- [ ] RazorPay Gateway (Planned)
 
 ---
 
 ## 📞 Support
 
-- 📧 **Email**: support@payrollsystem.com
-- 📱 **WhatsApp**: +91-XXXXXXXXXX
+- 📧 **Email**: sanjith.hangala@gmail.com
+- 📱 **WhatsApp**: +91-7760264194
 - 💬 **Discord**: Join our community
 - 📖 **Wiki**: Comprehensive documentation
 
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
@@ -419,18 +337,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 [![GitHub forks](https://img.shields.io/github/forks/yourusername/payroll-management-system?style=social)](https://github.com/yourusername/payroll-management-system/network/members)
 [![GitHub issues](https://img.shields.io/github/issues/yourusername/payroll-management-system)](https://github.com/yourusername/payroll-management-system/issues)
 
-**Made with ❤️ by [Your Name](https://github.com/yourusername)**
+**Made with ❤️ by [Sanjith Kumar H R](https://github.com/Sanjith7760)**
 
 *Happy Coding! 🚀*
 
 </div>
 
 ---
-
-## 🔗 Quick Links
-
-- [🌐 Live Demo](#)
-- [📚 Documentation](#)
-- [🐛 Report Bug](https://github.com/yourusername/payroll-management-system/issues)
-- [💡 Request Feature](https://github.com/yourusername/payroll-management-system/issues)
-- [💬 Discussions](https://github.com/yourusername/payroll-management-system/discussions)
