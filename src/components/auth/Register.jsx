@@ -12,6 +12,14 @@ const Register = () => {
   })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [fieldErrors, setFieldErrors] = useState({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  })
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const { register, isAuthenticated } = useAuth()
 
@@ -19,35 +27,93 @@ const Register = () => {
     return <Navigate to="/employee-dashboard" replace />
   }
 
+  const validateUsername = (username) => {
+    if (username.length < 3) {
+      return 'Username must be at least 3 characters long'
+    }
+    if (!/^[A-Z]/.test(username)) {
+      return 'First letter must be capital'
+    }
+    if (!/^[A-Za-z0-9_]+$/.test(username)) {
+      return 'Username can only contain letters, numbers, and underscores'
+    }
+    return ''
+  }
+
+  const validatePassword = (password) => {
+    if (password.length < 8) {
+      return 'Password must be at least 8 characters long'
+    }
+    if (!/(?=.*[a-z])/.test(password)) {
+      return 'Password must contain at least one lowercase letter'
+    }
+    if (!/(?=.*[A-Z])/.test(password)) {
+      return 'Password must contain at least one uppercase letter'
+    }
+    if (!/(?=.*\d)/.test(password)) {
+      return 'Password must contain at least one number'
+    }
+    if (!/(?=.*[@$!%*?&])/.test(password)) {
+      return 'Password must contain at least one special character (@$!%*?&)'
+    }
+    return ''
+  }
+
   const handleChange = (e) => {
+    const { name, value } = e.target
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
+    })
+
+    // Clear error when user starts typing
+    if (fieldErrors[name]) {
+      setFieldErrors({
+        ...fieldErrors,
+        [name]: ''
+      })
+    }
+  }
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target
+    let error = ''
+
+    switch (name) {
+      case 'username':
+        error = validateUsername(value)
+        break
+      case 'email':
+        error = validateEmail(value) ? '' : 'Please enter a valid email address'
+        break
+      case 'password':
+        error = validatePassword(value)
+        break
+      case 'confirmPassword':
+        error = value !== formData.password ? 'Passwords do not match' : ''
+        break
+      default:
+        break
+    }
+
+    setFieldErrors({
+      ...fieldErrors,
+      [name]: error
     })
   }
 
   const validateForm = () => {
-    if (formData.username.length < 3) {
-      setError('Username must be at least 3 characters long')
-      return false
+    const errors = {
+      username: validateUsername(formData.username),
+      email: validateEmail(formData.email) ? '' : 'Please enter a valid email address',
+      password: validatePassword(formData.password),
+      confirmPassword: formData.password !== formData.confirmPassword ? 'Passwords do not match' : ''
     }
 
-    if (!validateEmail(formData.email)) {
-      setError('Please enter a valid email address')
-      return false
-    }
+    setFieldErrors(errors)
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters long')
-      return false
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match')
-      return false
-    }
-
-    return true
+    // Check if any errors exist
+    return Object.values(errors).every(error => error === '')
   }
 
   const handleSubmit = async (e) => {
@@ -70,6 +136,14 @@ const Register = () => {
     }
   }
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword)
+  }
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword)
+  }
+
   return (
     <div className="auth-container">
       <div className="auth-card">
@@ -87,59 +161,100 @@ const Register = () => {
 
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="username" className="form-label">Username</label>
+            <label htmlFor="username" className="form-label">Username *</label>
             <input
               type="text"
-              className="form-control"
+              className={`form-control ${fieldErrors.username ? 'is-invalid' : ''}`}
               id="username"
               name="username"
               value={formData.username}
               onChange={handleChange}
+              onBlur={handleBlur}
               required
               disabled={loading}
+              placeholder="First letter must be capital (e.g., John123)"
             />
+            {fieldErrors.username && (
+              <div className="invalid-feedback">{fieldErrors.username}</div>
+            )}
           </div>
 
           <div className="mb-3">
-            <label htmlFor="email" className="form-label">Email</label>
+            <label htmlFor="email" className="form-label">Email *</label>
             <input
               type="email"
-              className="form-control"
+              className={`form-control ${fieldErrors.email ? 'is-invalid' : ''}`}
               id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
+              onBlur={handleBlur}
               required
               disabled={loading}
+              placeholder="example@company.com"
             />
+            {fieldErrors.email && (
+              <div className="invalid-feedback">{fieldErrors.email}</div>
+            )}
           </div>
 
           <div className="mb-3">
-            <label htmlFor="password" className="form-label">Password</label>
-            <input
-              type="password"
-              className="form-control"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              disabled={loading}
-            />
+            <label htmlFor="password" className="form-label">Password *</label>
+            <div className="input-group">
+              <input
+                type={showPassword ? "text" : "password"}
+                className={`form-control ${fieldErrors.password ? 'is-invalid' : ''}`}
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                required
+                disabled={loading}
+                placeholder="At least 8 characters with uppercase, lowercase, number, and special character"
+              />
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                onClick={togglePasswordVisibility}
+                disabled={loading}
+              >
+                <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+              </button>
+              {fieldErrors.password && (
+                <div className="invalid-feedback">{fieldErrors.password}</div>
+              )}
+            </div>
+            
           </div>
 
           <div className="mb-4">
-            <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
-            <input
-              type="password"
-              className="form-control"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-              disabled={loading}
-            />
+            <label htmlFor="confirmPassword" className="form-label">Confirm Password *</label>
+            <div className="input-group">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                className={`form-control ${fieldErrors.confirmPassword ? 'is-invalid' : ''}`}
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                required
+                disabled={loading}
+                placeholder="Re-enter your password"
+              />
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                onClick={toggleConfirmPasswordVisibility}
+                disabled={loading}
+              >
+                <i className={`bi ${showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+              </button>
+              {fieldErrors.confirmPassword && (
+                <div className="invalid-feedback">{fieldErrors.confirmPassword}</div>
+              )}
+            </div>
           </div>
 
           <button
