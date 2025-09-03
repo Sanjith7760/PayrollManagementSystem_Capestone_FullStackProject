@@ -1,0 +1,106 @@
+-- Create database
+CREATE DATABASE payroll_management_system;
+USE payroll_management_system;
+
+-- Users table
+CREATE TABLE users (
+    user_id INT NOT NULL AUTO_INCREMENT,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('ADMIN', 'EMPLOYEE') NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id)
+);
+
+-- Departments table
+CREATE TABLE departments (
+    department_id INT NOT NULL AUTO_INCREMENT,
+    department_name VARCHAR(100) NOT NULL UNIQUE,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (department_id)
+);
+
+-- Job roles table
+CREATE TABLE job_roles (
+    job_id INT NOT NULL AUTO_INCREMENT,
+    job_title VARCHAR(100) NOT NULL UNIQUE,
+    base_salary DECIMAL(10,2) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (job_id)
+);
+
+-- Employees table
+CREATE TABLE employees (
+    employee_id INT NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL UNIQUE,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    date_of_birth DATE,
+    phone_number VARCHAR(15),
+    address TEXT,
+    hire_date DATE NOT NULL,
+    department_id INT,
+    job_id INT,
+    leave_balance INT DEFAULT 20,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (employee_id),
+    CONSTRAINT fk_employee_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    CONSTRAINT fk_employee_department FOREIGN KEY (department_id) REFERENCES departments(department_id) ON DELETE SET NULL,
+    CONSTRAINT fk_employee_job FOREIGN KEY (job_id) REFERENCES job_roles(job_id) ON DELETE SET NULL
+);
+
+-- Leave requests table
+CREATE TABLE leave_requests (
+    leave_id INT NOT NULL AUTO_INCREMENT,
+    employee_id INT NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    leave_type ENUM('SICK','CASUAL','PAID','UNPAID') NOT NULL DEFAULT 'CASUAL',
+    reason TEXT,
+    status ENUM('PENDING','APPROVED','REJECTED') NOT NULL DEFAULT 'PENDING',
+    applied_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    processed_date TIMESTAMP NULL,
+    processed_by INT NULL,
+    PRIMARY KEY (leave_id),
+    CONSTRAINT fk_leave_employee FOREIGN KEY (employee_id) REFERENCES employees(employee_id) ON DELETE CASCADE,
+    CONSTRAINT fk_leave_processed FOREIGN KEY (processed_by) REFERENCES employees(employee_id) ON DELETE SET NULL
+);
+
+-- Payroll table
+CREATE TABLE payroll (
+    payroll_id INT NOT NULL AUTO_INCREMENT,
+    employee_id INT NOT NULL,
+    month INT NOT NULL,
+    year INT NOT NULL,
+    base_salary DECIMAL(10,2) NOT NULL,
+    allowances DECIMAL(10,2) DEFAULT 0,
+    deductions DECIMAL(10,2) DEFAULT 0,
+    net_salary DECIMAL(10,2) NOT NULL,
+    status ENUM('PENDING','PROCESSED','PAID') DEFAULT 'PENDING',
+    generated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    processed_date TIMESTAMP NULL,
+    PRIMARY KEY (payroll_id),
+    CONSTRAINT fk_payroll_employee FOREIGN KEY (employee_id) REFERENCES employees(employee_id) ON DELETE CASCADE
+);
+
+-- Salary history table
+CREATE TABLE salary_history (
+    history_id INT NOT NULL AUTO_INCREMENT,
+    employee_id INT NOT NULL,
+    previous_salary DECIMAL(10,2) NOT NULL,
+    new_salary DECIMAL(10,2) NOT NULL,
+    change_date DATE NOT NULL,
+    reason TEXT,
+    changed_by INT NOT NULL,
+    PRIMARY KEY (history_id),
+    CONSTRAINT fk_salary_employee FOREIGN KEY (employee_id) REFERENCES employees(employee_id) ON DELETE CASCADE,
+    CONSTRAINT fk_salary_changedby FOREIGN KEY (changed_by) REFERENCES employees(employee_id) ON DELETE CASCADE
+);
