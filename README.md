@@ -3,8 +3,8 @@
 <div align="center">
   
 ![Payroll Management System](https://img.shields.io/badge/Payroll-Management%20System-blue?style=for-the-badge)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.0-brightgreen?style=for-the-badge&logo=springboot)
-![React](https://img.shields.io/badge/React-18.2.0-61dafb?style=for-the-badge&logo=react)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.1.0-brightgreen?style=for-the-badge&logo=springboot)
+![React](https://img.shields.io/badge/React-19.1.1-61dafb?style=for-the-badge&logo=react)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-orange?style=for-the-badge&logo=mysql)
 
 *A comprehensive, full-stack payroll management solution built with modern technologies*
@@ -105,7 +105,7 @@ graph TB
 ## 🛠️ Tech Stack
 
 ### **Frontend**
-- ⚛️ **React 18** - Modern UI library with hooks
+- ⚛️ **React 19** - Modern UI library with hooks
 - 🛣️ **React Router DOM** - Client-side routing
 - 🎨 **Bootstrap 5** - Responsive CSS framework
 - 🎯 **Axios** - HTTP client for API calls
@@ -113,7 +113,7 @@ graph TB
 
 ### **Backend**
 - ☕ **Java 17** - Latest LTS version
-- 🍃 **Spring Boot 3.2** - Enterprise application framework
+- 🍃 **Spring Boot 3.1** - Enterprise application framework
 - 🔒 **Spring Security** - Authentication and authorization
 - 🛡️ **JWT** - Stateless authentication tokens
 - 🗄️ **Spring Data JPA** - Database abstraction layer
@@ -146,7 +146,7 @@ graph TB
 
 ### **Prerequisites**
 - ☕ Java 17 or higher
-- 📦 Node.js 20.17.0 or higher
+- 📦 Node.js 22.17.0 or higher
 - 📊 MySQL 8.0 or higher
 - 🔧 Maven 3.9 or higher
 
@@ -157,7 +157,7 @@ graph TB
 # application.properties
 spring.datasource.url=jdbc:mysql://localhost:3306/payroll_management_system
 spring.datasource.username=root
-spring.datasource.password=your_password
+spring.datasource.password=sanjith
 ```
 
 2. **Run Backend**
@@ -276,9 +276,9 @@ Select "Run As" → "JUnit Test"
 
 - ⚡ **Page Load Time**: < 2 seconds
 - 🔄 **API Response Time**: < 500ms average
-- 📱 **Mobile Responsive**: 100% compatible
+- 📱 **Mobile Responsive**: 60% compatible
 - 🎯 **Lighthouse Score**: 95+ performance
-- 🔒 **Security**: A+ SSL rating
+
 
 ---
 
@@ -310,15 +310,6 @@ We welcome contributions! Please follow these steps:
 
 ---
 
-## 📞 Support
-
-- 📧 **Email**: sanjith.hangala@gmail.com
-- 📱 **WhatsApp**: +91-7760264194
-- 💬 **Discord**: Join our community
-- 📖 **Wiki**: Comprehensive documentation
-
-
----
 
 ## 👏 Acknowledgments
 
